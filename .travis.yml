@@ -2,4 +2,4 @@ language: python
 python:
   - 3.7
 script:
-  - python3 Aniruddh-Homework-6.py -H 
+  - python3 Aniruddh-Homework-6.py -h
