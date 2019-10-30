@@ -13,8 +13,10 @@ def parser_function():
     parser = argparse.ArgumentParser()
     parser.add_argument("data_file", type=str, help="Enter the .date file with the path")
     parser.add_argument("delimiter", type=str, help="Delimiter used in the file")
+    parser.add_argument("--plot", "-p", type=str, help="Enter Yes if you would like to plot graphs")
+    parser.add_argument("--summary", "-s", type=str, help="Enter the column name to calculate mean, standard deviation and indentify if the data is categorical/descrete")
     arguments = parser.parse_args()
-    input_file = [arguments.data_file, arguments.delimiter]
+    input_file = [arguments.data_file, arguments.delimiter, arguments.plot, arguments.plot, arguments.summary]
     print("The files are", input_file)
     return input_file
 
