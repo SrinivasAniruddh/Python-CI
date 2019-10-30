@@ -1,5 +1,5 @@
 language: python
 python:
   - 3.7
-  - 3.6
-  
+script:
+  - python3 Aniruddh-Homework-6.py -H 
