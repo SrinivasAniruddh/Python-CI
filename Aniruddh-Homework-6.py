@@ -3,7 +3,7 @@ import os.path
 import csv
 import matplotlib.pyplot as graph
 import numpy as np
-import scipy.interpolate as sci_ip
+
 
 """ Variables """
 file_dictionary = {}
@@ -22,8 +22,9 @@ def parser_function():
     parser.add_argument("--interpolate", "-ip", nargs='+', help="Enter two column names and the value in the first "
                                                                 "column")
     arguments = parser.parse_args()
-    if len(arguments.interpolate) != 3:
-        raise Exception("Enter exactly 3 values for interpolate argument")
+    if arguments.interpolate is not None and len(arguments.interpolate) != 3:
+        print("Enter exactly 3 values for interpolate argument")
+        exit(0)
     input_file = [arguments.data_file, arguments.delimiter, arguments.plot, arguments.summary, arguments.interpolate]
     print("The files are", input_file)
     return input_file
@@ -95,7 +96,7 @@ def validate_headers(file_dictionary, column_name):
     try:
         return np.array(file_dictionary[column_name])
     except KeyError as e:
-        raise e
+        exit("The column name is incorrect")
     except Exception as ex:
         raise ex
 
@@ -124,44 +125,39 @@ def interpolate_columns(column_1, column_2, column_1_value, file_dictionary):
     validate_headers(file_dictionary, column_2)
     column_1_array = np.array(file_dictionary[column_1])
     column_2_array = np.array(file_dictionary[column_2])
+    if type(set_data_type(column_1_value)) is str:
+        print("Please enter float value or int value for the column value")
+        exit(0)
+
     if min(column_1_array) <= float(column_1_value) <= max(column_1_array):
         print("Value within range")
     else:
-        exit("Value " + str(column_1_value) + " out of range for " + column_1 + "column!Use --summary argument "
+        print("Value " + str(column_1_value) + " out of range for " + column_1 + "column!Use --summary argument "
                                                                                 "instead")
-    interpolated_value = np.interp(column_1_value, column_1_array, column_2_array)
+        exit(0)
+
+    if len(set(file_dictionary[column_2])) < 3 or len(set(file_dictionary[column_1])) < 3:
+        print("Exiting the interpolation as the number of unique data points would be less than 6")
+        exit(0)
+
+    interpolated_value = np.interp(set_data_type(column_1_value), column_1_array, column_2_array)
     print("The corresponding value of {} for {} with a value {} is {}".format(column_2, column_1, column_1_value, interpolated_value))
 
-    if len(set(file_dictionary[column_2])) < 6 or len(set(file_dictionary[column_1])) < 6:
-        exit("Exiting the interpolation as the number of unique data points would be less than 6")
-    graph.ylabel(column_2)
-    graph.xlabel(column_1)
+    linear = np.polyfit(file_dictionary[column_1], file_dictionary[column_2], 1)
+    interpol_linear = np.polyval(linear, set_data_type(column_1_value))
+    print("Value for linear equation is {}".format(interpol_linear))
 
-    # x = np.array(file_dictionary[column_1])
-    # y = np.array(file_dictionary[column_2])
-    # yinterpol = np.interp(column_1_value, np.array(file_dictionary[column_1]), np.array(file_dictionary[column_2]))
-    #yvals = np.linspace(min(column_2_array), max(column_2_array), len(column_2_array))
-    #yinterpol = sci_ip.interp1d(0.5, column_1_array, column_2_array)
-    #linear = np.polyfit(column_1_value, column_1_value, 1)
-    #print("F Order is {}".format(linear))
-    # linear = np.polyfit(first_order, column_2_array, 1)
-    # degree_2 = np.polyfit(column_1_array, column_2_array, 2)
-    # degree_3 = np.polyfit(column_1_array, column_2_array, 3)
-    degree_4 = np.polyfit(column_1_array, column_2_array, 4)
-    #yp = np.linspace(min(column_2_array), max(column_2_array), len(column_2_array) // 2)
-    # graph.plot(column_1_array, column_2_array, '.')
-    # graph.plot(yp, np.polyval(linear, first_order), 'g--', label='linear')
-    # graph.plot(yp, np.polyval(degree_2, yp), 'c--', label='square')
-    # graph.plot(yp, np.polyval(degree_3, yp), 'y--', label='cubic')
-    # graph.show()
-    #first_order = sci_ip.interp1d(column_1_array, column_2_array)
-    #second_order = sci_ip.interp1d(column_1_array, column_2_array, kind='square')
-    #third_order = sci_ip.interp1d(column_1_array, column_2_array, kind='cubic')
-    # xp = np.linspace(min(x), max(x), len(x) // 2)
-    # graph.plot(x, y, '.')
-    # graph.plot(xp, yinterpol, 'g--', label='linear')
-    # graph.show()
-    # graph.plot(xp, np.polyval(linear, xp), 'g--', label='linear')
+    square = np.polyfit(file_dictionary[column_1], file_dictionary[column_2], 2)
+    interpol_square = np.polyval(square, set_data_type(column_1_value))
+    print("The interpolated value for 2-degree poly is {}".format(interpol_square))
+
+    cubic = np.polyfit(file_dictionary[column_1], file_dictionary[column_2], 3)
+    interpol_cubic = np.polyval(cubic, set_data_type(column_1_value))
+    print("THe interpolated value for 3-degree poly is {}".format(interpol_cubic))
+
+    quadra = np.polyfit(file_dictionary[column_1], file_dictionary[column_2], 4)
+    interpol_quadra= np.polyval(quadra, set_data_type(column_1_value))
+    print("The interpolated value for 4-degree poly is {}".format(interpol_quadra))
 
 
 def create_dictionary(headers, sorted_list):
@@ -210,6 +206,7 @@ def main():
     elif input_file[3] is not None:
         column_values = validate_headers(file_dictionary, input_file[3])
         perform_statistical_computations(file_dictionary, input_file[3], column_values)
+    elif input_file[4] is not None:
         interpolate_columns(input_file[4][0], input_file[4][1], input_file[4][2], file_dictionary)
 
 
