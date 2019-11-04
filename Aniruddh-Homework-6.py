@@ -96,7 +96,8 @@ def validate_headers(file_dictionary, column_name):
     try:
         return np.array(file_dictionary[column_name])
     except KeyError as e:
-        exit("The column name is incorrect")
+        print("The column name is incorrect")
+        exit(0)
     except Exception as ex:
         raise ex
 
