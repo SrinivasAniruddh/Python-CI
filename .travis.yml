@@ -7,7 +7,6 @@ script:
   - python3 Aniruddh-Homework-6.py diabetes.data " " -p=yes
   - python3 Aniruddh-Homework-6.py diabetes.data " " -s=age
   - python3 Aniruddh-Homework-6.py diabetes.data " " -s=awarawesdgvasdf
-  - python3 Aniruddh-Homework-6.py diabetes.data " " -ip=age sex 0.003 asdf jaslf slkdf
-  - python3 Aniruddh-Homework-6.py diabetes.data " " -ip=age 
+  - python3 Aniruddh-Homework-6.py diabetes.data " " -ip=age
+  - python3 Aniruddh-Homework-6.py diabetes.data " " -ip=aalpha 
   - python3 Aniruddh-Homework-6.py diabetes.data " " -ip=age sex sdrga
-  - python3 Aniruddh-Homework-6.py diabetes.data " " -ip=aplha beta gamma
