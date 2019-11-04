@@ -9,6 +9,7 @@ import scipy.interpolate as sci_ip
 file_dictionary = {}
 sorted_list = []
 
+
 def parser_function():
     """ Take arguments from command line """
     parser = argparse.ArgumentParser()
