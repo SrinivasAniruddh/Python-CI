@@ -9,4 +9,4 @@ script:
   - python3 Aniruddh-Homework-6.py diabetes.data " " -s=awarawesdgvasdf
   - python3 Aniruddh-Homework-6.py diabetes.data " " -ip=age
   - python3 Aniruddh-Homework-6.py diabetes.data " " -ip=aalpha
-  - python3 Aniruddh-Homework-8.py diabetes.data " "
+  - python3 Homework-8/Aniruddh-Homework-8.py diabetes.data " "
